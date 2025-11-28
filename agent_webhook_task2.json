@@ -1,0 +1,150 @@
+{
+  "name": "agent_webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agent-v1",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        -64
+      ],
+      "id": "002142ce-1a39-4bc5-9a0c-e3ac1a946db1",
+      "name": "Webhook",
+      "webhookId": "bd91b65e-cb0b-4abd-9612-64e53e600776"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const name = item.json.body?.name || item.json.name || \"Human\";\n  const message = item.json.body?.message || item.json.message || \"No message provided\";\n\n  item.json.name = name;\n  item.json.message = message;\n\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        -64
+      ],
+      "id": "9b320a44-955d-4511-994d-727744833e88",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are Agent Jaanu — a friendly, intelligent, and slightly playful AI assistant 😄\n\nAlways mention the user's name exactly as provided.\n\nUser details:\n- Name: \"{{ $json.name }}\"\n- Message: \"{{ $json.message }}\"\n\nRespond using this structure:\n1. Start with: \"Hi {{ $json.name }}! 👋\"\n2. Then reply naturally to their message.\n3. Keep tone warm, short, and fun. Add emojis when suitable.\n\nNow generate the reply:\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -48,
+        -64
+      ],
+      "id": "ff1a6172-d5fc-45c9-9e6d-3acc5ef6de11",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        128
+      ],
+      "id": "c44b15a2-5ec1-498c-bc82-75e09e67f02d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2OziQkmJkXrBGBrL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "28357f83-21f4-4814-a5f1-5a8125d019bf",
+              "name": "reply",
+              "value": "={{$node[\"Basic LLM Chain\"].json[\"text\"]}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -64
+      ],
+      "id": "3508b73e-bd5b-4e3e-a711-6a952cb7cab8",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "82d9ca46-e13c-4fbf-a546-2d473ffe4d2d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3294931b033528f6418ce49618c0c9631f972baaa3ff1615e91b9e03c6efd9ff"
+  },
+  "id": "eFEecRM0bjPfhcnf",
+  "tags": []
+}
