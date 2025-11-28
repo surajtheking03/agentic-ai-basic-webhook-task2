@@ -2,6 +2,17 @@
 
 This repository contains my second working AI automation workflow built using **n8n** with a live **webhook trigger**, **JavaScript prompt builder**, and **Gemini Flash Lite model** for intelligent personalized responses.
 
+🔑 Note: This workflow does not include an active API key for safety reasons.
+
+To run it successfully:
+
+1. Import the workflow into your n8n instance.
+2. Open the "Google Gemini" credential node.
+3. Add your own Gemini API key.
+4. Save credentials and re-run the workflow.
+
+API keys are intentionally removed before publishing to protect security and avoid unauthorized usage. 🙂
+
 ---
 
 ## 📌 Overview
@@ -63,14 +74,5 @@ With JSON body:
   "reply": "Hi Suraj! 😎 Agent Jaanu reporting for duty. What's up?"
 }
 
-// 🔑 Note: This workflow does not include an active API key for safety reasons.
 
-To run it successfully:
-
-1. Import the workflow into your n8n instance.
-2. Open the "Google Gemini" credential node.
-3. Add your own Gemini API key.
-4. Save credentials and re-run the workflow.
-
-API keys are intentionally removed before publishing to protect security and avoid unauthorized usage. 🙂
 
